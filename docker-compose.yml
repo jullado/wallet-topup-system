@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+  db:
+    container_name: postgres_db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: julladith
+      POSTGRES_PASSWORD: '123456'
+      PGDATA: /data/postgres
+      POSTGRES_DB: tmds
+    volumes:
+       - postgres:/data/postgres
+    networks:
+      - wallet
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    networks:
+      - wallet
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_URI: postgres://julladith:123456@db:5432/tmds
+      CACHE_URI: redis://redis:6379/0
+      # API_KEY: '123456'
+    networks:
+      - wallet
+
+networks:
+  wallet:
+    driver: bridge
+
+volumes:
+    postgres:

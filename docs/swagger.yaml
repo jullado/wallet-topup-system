@@ -1,0 +1,176 @@
+definitions:
+  models.HandTopUpConfirmedReqModel:
+    properties:
+      transaction_id:
+        example: 123e4567-e89b-12d3-a456-426655440000
+        type: string
+    type: object
+  models.HandTopUpVerifiedReqModel:
+    properties:
+      amount:
+        example: 100
+        type: number
+      payment_method:
+        example: credit_card
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  models.SrvTopUpConfirmedResModel:
+    properties:
+      amount:
+        example: 100
+        type: number
+      balance:
+        example: 100
+        type: number
+      status:
+        example: confirmed
+        type: string
+      transaction_id:
+        example: 123e4567-e89b-12d3-a456-426655440000
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  models.SrvTopUpVerifiedResModel:
+    properties:
+      amount:
+        example: 100
+        type: number
+      expires_at:
+        example: "2025-05-14T00:00:00Z"
+        type: string
+      payment_method:
+        example: credit_card
+        type: string
+      status:
+        example: verified
+        type: string
+      transaction_id:
+        example: 123e4567-e89b-12d3-a456-426655440000
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  models.SrvUserWalletModel:
+    properties:
+      balance:
+        example: 100
+        type: number
+      currency:
+        example: THB
+        type: string
+      name:
+        example: Julladith Klinloy
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  utils.ErrHandler:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: error message
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API สำหรับ Topup Wallet System
+  title: Wallet Topup System API
+  version: 1.0.0
+paths:
+  /user/wallet/{user_id}:
+    get:
+      consumes:
+      - application/json
+      description: สําหรับดึงข้อมูล wallet ของ user โดยกำหนด user_id เริ่มต้นตอนสร้างระบบ
+        คือ 1
+      parameters:
+      - description: user_id สําหรับดึงข้อมูล wallet ของ user
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SrvUserWalletModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user wallet
+      tags:
+      - User
+  /wallet/confirm:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: payload สำหรับ confirm Top-up Transaction
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.HandTopUpConfirmedReqModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SrvTopUpConfirmedResModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Confirm a Top-up Transaction
+      tags:
+      - Wallet
+  /wallet/verify:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: payload สำหรับสร้าง Top-up Transaction โดยมีเวลาหมดอายุ 1 นาที
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.HandTopUpVerifiedReqModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SrvTopUpVerifiedResModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrHandler'
+      security:
+      - ApiKeyAuth: []
+      summary: Verify a Top-up Transaction
+      tags:
+      - Wallet
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: X-API-KEY
+    type: apiKey
+swagger: "2.0"
