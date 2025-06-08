@@ -27,6 +27,21 @@
 
 ---
 
+## 🧱 Tech Stack
+
+- **Go Version**: 1.24  
+- **Web Framework**: Go Fiber  
+- **ORM**: GORM + PostgreSQL  
+- **Cache**: Redis  
+- **Auth**: API Key + Middleware  
+- **Logging**: Uber Zap  
+- **API Docs**: Swagger (swag + fiber/swagger)  
+
+- **Testing**: Testify  
+- **ERD Tool**: dbdiagram.io
+
+---
+
 ## 🧱 Project Structure
 
 โครงสร้างระบบนี้ใช้แนวคิด **Hexagonal Architecture** (Ports & Adapters) เพื่อให้ระบบสามารถแยกส่วนของ **Business Logic**, **Data Access**, และ **Presentation Layer** ออกจากกันอย่างชัดเจน
